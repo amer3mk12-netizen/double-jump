@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "doublejump",
+  "version": "${version}",
+  "name": "Double Jump",
+  "description": "Adds a second jump while airborne.",
+  "authors": ["amer mk"],
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.amermk.doublejump.DoubleJump"
+    ],
+    "client": [
+      "com.amermk.doublejump.DoubleJumpClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "~1.21.11",
+    "fabric-api": "*",
+    "java": ">=21"
+  }
+}
+
