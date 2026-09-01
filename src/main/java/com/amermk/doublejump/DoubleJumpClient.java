@@ -20,22 +20,23 @@ public class DoubleJumpClient implements ClientModInitializer {
                 return;
             }
 
-            // بعد ما يلمس الأرض، نسمح بالدبل جمب من جديد
+            // عند لمس الأرض، نعيد السماح بالقفزة الثانية
             if (player.onGround()) {
                 usedAirJump = false;
             }
 
             boolean jumpDown = client.options.keyJump.isDown();
 
-            // القفزة الثانية
-            if (jumpDown
-                    && !wasJumpDown
+            // فقط ضغطة جديدة على Space أثناء وجود اللاعب بالهواء
+            boolean newJumpPress = jumpDown && !wasJumpDown;
+
+            if (newJumpPress
                     && !player.onGround()
                     && !usedAirJump
                     && !player.getAbilities().flying) {
 
-                // قوة القفز الطبيعية للاعب العادي
-                double jumpVelocity = 1.00D;
+                // قوة القفزة الطبيعية
+                double jumpVelocity = 0.42D;
 
                 player.setDeltaMovement(
                         player.getDeltaMovement().x,
@@ -49,4 +50,4 @@ public class DoubleJumpClient implements ClientModInitializer {
             wasJumpDown = jumpDown;
         });
     }
-}
+} 
