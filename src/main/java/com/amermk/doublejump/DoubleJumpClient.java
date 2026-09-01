@@ -47,13 +47,4 @@ public class DoubleJumpClient implements ClientModInitializer {
             wasJumpDown = jumpDown;
         });
     }
-}                        player.getDeltaMovement().z
-                );
-
-                usedAirJump = true;
-            }
-
-            wasJumpDown = jumpDown;
-        });
-    }
-}
+} 
