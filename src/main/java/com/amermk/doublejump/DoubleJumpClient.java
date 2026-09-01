@@ -2,43 +2,40 @@ package com.amermk.doublejump;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.player.LocalPlayer;
 
 public class DoubleJumpClient implements ClientModInitializer {
-
-    private boolean previousJump = false;
-    private boolean doubleJumpUsed = false;
+    private boolean wasJumpDown = false;
+    private boolean usedAirJump = false;
 
     @Override
     public void onInitializeClient() {
-
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            LocalPlayer player = client.player;
+            if (player == null) return;
 
-            if (client.player == null) {
-                return;
+            if (player.onGround()) {
+                usedAirJump = false;
             }
 
-            boolean onGround = client.player.onGround();
-            boolean jumpPressed = client.options.keyJump.isDown();
+            boolean jumpDown = client.options.keyJump.isDown();
 
-            if (onGround) {
-                doubleJumpUsed = false;
+            if (jumpDown && !wasJumpDown && !player.onGround()
+                    && !player.isSpectator()
+                    && !usedAirJump
+                    && !player.getAbilities().flying) {
+
+                player.setDeltaMovement(
+                    player.getDeltaMovement().x,
+                    0.42D,
+                    player.getDeltaMovement().z
+                );
+
+                player.hasImpulse = true;
+                usedAirJump = true;
             }
 
-            boolean newPress = jumpPressed && !previousJump;
-
-            if (newPress
-                    && !onGround
-                    && !doubleJumpUsed
-                    && !client.player.getAbilities().flying
-                    && !client.player.isSpectator()) {
-
-                ClientPlayNetworking.send(new DoubleJumpPayload());
-                doubleJumpUsed = true;
-            }
-
-            previousJump = jumpPressed;
+            wasJumpDown = jumpDown;
         });
     }
 }
-
