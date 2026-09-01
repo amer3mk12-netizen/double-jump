@@ -5,12 +5,15 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.player.LocalPlayer;
 
 public class DoubleJumpClient implements ClientModInitializer {
+
     private boolean wasJumpDown = false;
     private boolean usedAirJump = false;
 
     @Override
     public void onInitializeClient() {
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+
             LocalPlayer player = client.player;
 
             if (player == null) {
@@ -37,10 +40,6 @@ public class DoubleJumpClient implements ClientModInitializer {
                 usedAirJump = true;
             }
 
-            wasJumpDown = jumpDown;
-        });
-    }
-}
             wasJumpDown = jumpDown;
         });
     }
