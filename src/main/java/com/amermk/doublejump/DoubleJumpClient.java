@@ -12,7 +12,10 @@ public class DoubleJumpClient implements ClientModInitializer {
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             LocalPlayer player = client.player;
-            if (player == null) return;
+
+            if (player == null) {
+                return;
+            }
 
             if (player.onGround()) {
                 usedAirJump = false;
@@ -26,15 +29,18 @@ public class DoubleJumpClient implements ClientModInitializer {
                     && !player.getAbilities().flying) {
 
                 player.setDeltaMovement(
-                    player.getDeltaMovement().x,
-                    0.42D,
-                    player.getDeltaMovement().z
+                        player.getDeltaMovement().x,
+                        0.42D,
+                        player.getDeltaMovement().z
                 );
 
-                player.hasImpulse = true;
                 usedAirJump = true;
             }
 
+            wasJumpDown = jumpDown;
+        });
+    }
+}
             wasJumpDown = jumpDown;
         });
     }
