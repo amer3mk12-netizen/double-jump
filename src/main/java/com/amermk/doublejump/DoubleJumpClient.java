@@ -26,15 +26,28 @@ public class DoubleJumpClient implements ClientModInitializer {
 
             boolean jumpDown = client.options.keyJump.isDown();
 
-            if (jumpDown && !wasJumpDown && !player.onGround()
-                    && !player.isSpectator()
+            if (jumpDown
+                    && !wasJumpDown
+                    && !player.onGround()
                     && !usedAirJump
                     && !player.getAbilities().flying) {
 
+                // نفس قوة القفز الطبيعية
+                float jumpVelocity = player.getJumpPower();
+
                 player.setDeltaMovement(
                         player.getDeltaMovement().x,
-                        0.42D,
+                        jumpVelocity,
                         player.getDeltaMovement().z
+                );
+
+                usedAirJump = true;
+            }
+
+            wasJumpDown = jumpDown;
+        });
+    }
+}                        player.getDeltaMovement().z
                 );
 
                 usedAirJump = true;
