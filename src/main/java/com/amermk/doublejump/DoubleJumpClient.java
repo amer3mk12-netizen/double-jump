@@ -33,15 +33,15 @@ public class DoubleJumpClient implements ClientModInitializer {
                     && !player.getAbilities().flying) {
 
                 // نفس قوة القفز الطبيعية
-                float jumpVelocity = player.getJumpPower();
+double jumpVelocity = 0.42D;
 
-                player.setDeltaMovement(
-                        player.getDeltaMovement().x,
-                        jumpVelocity,
-                        player.getDeltaMovement().z
-                );
+player.setDeltaMovement(
+        player.getDeltaMovement().x,
+        jumpVelocity,
+        player.getDeltaMovement().z
+);
 
-                usedAirJump = true;
+usedAirJump = true;
             }
 
             wasJumpDown = jumpDown;
