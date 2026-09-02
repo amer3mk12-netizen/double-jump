@@ -7,7 +7,7 @@ import net.minecraft.client.player.LocalPlayer;
 public class DoubleJumpClient implements ClientModInitializer {
 
     private boolean wasJumpDown = false;
-    private boolean usedAirJump = false;
+    private boolean canDoubleJump = false;
 
     @Override
     public void onInitializeClient() {
@@ -20,34 +20,34 @@ public class DoubleJumpClient implements ClientModInitializer {
                 return;
             }
 
-            // عند لمس الأرض، نعيد السماح بالقفزة الثانية
-            if (player.onGround()) {
-                usedAirJump = false;
-            }
-
             boolean jumpDown = client.options.keyJump.isDown();
 
-            // فقط ضغطة جديدة على Space أثناء وجود اللاعب بالهواء
+            // اللاعب لمس الأرض -> نجهز دبل جمب جديد
+            if (player.onGround()) {
+                canDoubleJump = true;
+            }
+
+            // ضغطة Space جديدة
             boolean newJumpPress = jumpDown && !wasJumpDown;
 
+            // القفزة الثانية
             if (newJumpPress
+                    && canDoubleJump
                     && !player.onGround()
-                    && !usedAirJump
-                    && !player.getAbilities().flying) {
+                    && !player.getAbilities().flying
+                    && !player.isSpectator()) {
 
-                // قوة القفزة الطبيعية
-                double jumpVelocity = 0.42D;
-
+                // نفس قوة القفز الطبيعية
                 player.setDeltaMovement(
                         player.getDeltaMovement().x,
-                        jumpVelocity,
+                        0.42D,
                         player.getDeltaMovement().z
                 );
 
-                usedAirJump = true;
+                canDoubleJump = false;
             }
 
             wasJumpDown = jumpDown;
         });
     }
-} 
+}
