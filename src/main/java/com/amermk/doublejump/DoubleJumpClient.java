@@ -6,8 +6,9 @@ import net.minecraft.client.player.LocalPlayer;
 
 public class DoubleJumpClient implements ClientModInitializer {
 
-    private boolean wasJumpDown = false;
-    private boolean canDoubleJump = false;
+    private boolean wasOnGround = false;
+    private boolean doubleJumpUsed = false;
+    private boolean wasJumpPressed = false;
 
     @Override
     public void onInitializeClient() {
@@ -20,34 +21,39 @@ public class DoubleJumpClient implements ClientModInitializer {
                 return;
             }
 
-            boolean jumpDown = client.options.keyJump.isDown();
+            boolean onGround = player.onGround();
+            boolean jumpPressed = client.options.keyJump.isDown();
 
-            // اللاعب لمس الأرض -> نجهز دبل جمب جديد
-            if (player.onGround()) {
-                canDoubleJump = true;
+            // أول ما يلمس الأرض، نعيد الدبل جمب
+            if (onGround) {
+                doubleJumpUsed = false;
+                wasOnGround = true;
             }
 
-            // ضغطة Space جديدة
-            boolean newJumpPress = jumpDown && !wasJumpDown;
+            // نعتبرها ضغطة جديدة فقط إذا الزر كان مرفوعًا ثم انضغط
+            boolean newPress = jumpPressed && !wasJumpPressed;
 
-            // القفزة الثانية
-            if (newJumpPress
-                    && canDoubleJump
-                    && !player.onGround()
+            // الدبل جمب
+            if (newPress
+                    && !onGround
+                    && !doubleJumpUsed
                     && !player.getAbilities().flying
                     && !player.isSpectator()) {
 
-                // نفس قوة القفز الطبيعية
+                // نفس قوة القفزة الطبيعية
+                double jumpVelocity = 0.42D;
+
                 player.setDeltaMovement(
                         player.getDeltaMovement().x,
-                        0.42D,
+                        jumpVelocity,
                         player.getDeltaMovement().z
                 );
 
-                canDoubleJump = false;
+                doubleJumpUsed = true;
             }
 
-            wasJumpDown = jumpDown;
+            wasJumpPressed = jumpPressed;
+            wasOnGround = onGround;
         });
     }
 }
